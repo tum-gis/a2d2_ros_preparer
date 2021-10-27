@@ -1,0 +1,16 @@
+
+<launch>
+
+    <group ns="converter/options">
+        <rosparam file="$(find a2d2_ros_preparer)/config/default.yaml" />
+        
+        <!-- load your yaml config here (default yaml values are overwritten) -->
+        <!--<rosparam file="$(find a2d2_ros_preparer)/config/preview.yaml" />-->
+        <!--<rosparam file="$(find a2d2_ros_preparer)/config/ingolstadt.yaml" />-->
+        <rosparam file="$(find a2d2_ros_preparer)/config/ingolstadt.yaml" />
+        <!--<rosparam file="$(find a2d2_ros_preparer)/config/gaimersheim.yaml" />-->
+    </group>
+
+    <node name="converter" pkg="a2d2_ros_preparer" type="converter" output="screen" required="true" args="" />
+
+</launch>

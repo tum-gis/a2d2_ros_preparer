@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>a2d2_ros_preparer</name>
+  <version>0.8.0</version>
+  <description>The a2d2_ros_preparer package</description>
+
+  <maintainer email="benedikt.schwab@tum.de">Benedikt Schwab</maintainer>
+  <license>Apache 2.0</license>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>git</build_depend>
+  <build_depend>python3-sphinx</build_depend>
+  <build_depend>python3-sphinx-rtd-theme</build_depend>
+
+  <depend>cnpy</depend>
+  <depend>cv_bridge</depend>
+  <depend>eigen</depend>
+  <depend>eigen_conversions</depend>
+  <depend>image_transport</depend>
+  <depend>libgflags-dev</depend>
+  <depend>libgoogle-glog-dev</depend>
+  <depend>libpcl-all-dev</depend>
+  <depend>nav_msgs</depend>
+  <depend>nlohmann-json-dev</depend>
+  <depend>pcl_conversions</depend>
+  <depend>pcl_ros</depend>
+  <depend>rosbag</depend>
+  <depend>roscpp</depend>
+  <depend>roslib</depend>
+  <depend>sensor_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_eigen</depend>
+  <depend>tf2_ros</depend>
+
+</package>

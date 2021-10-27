@@ -1,0 +1,15 @@
+paths:
+  source_sensor_data_directory: "/path/to/a2d2-preview/camera_lidar/20180810_150607"
+  source_bus_signals_filepath: "/path/to/a2d2-preview/camera_lidar/20180810_150607/bus_signals_20180810150607.json"
+  source_sensor_configuration_filepath: "//path/to/a2d2-preview/cams_lidars.json"
+
+  target_directory: "/path/to/a2d2.audi/a2d2-preview_output"
+
+#filter:
+  # start_timestamp: 1533906480
+  # stop_timestamp: 1533906505
+
+  #camera_identifiers:
+    # - "front_center"
+    # - "side_left"
+ 

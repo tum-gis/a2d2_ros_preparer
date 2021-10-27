@@ -1,0 +1,46 @@
+============
+A2D2 Dataset
+============
+
+The `Audi Autonomous Driving Dataset (A2D2)`_ contains sensor data of an Audi Q7 e-tron for three test drives.
+A comprehensive description can be found in the `A2D2 paper`_ released by the Audi team.
+
+.. _Audi Autonomous Driving Dataset (A2D2): https://www.a2d2.audi
+.. _A2D2 paper: https://arxiv.org/abs/2004.06320
+
+Sensor Setup
+============
+
+The sensor setup is described in more detail on the `A2D2 page`_.
+
+.. _A2D2 page: https://www.a2d2.audi/a2d2/en/sensor-setup.html
+
+.. figure:: https://www.a2d2.audi/content/dam/a2d2/sensor-setup/1920x1080-desktop-aev-sensor-grafik-1.jpg
+  :alt: A2D2 Sensor Setup (top view)
+  :target: https://www.a2d2.audi/a2d2/en/sensor-setup.html
+  :class: with-shadow
+
+  Top view of sensor setup for the A2D2 dataset (src: `www.a2d2.audi <https://www.a2d2.audi/a2d2/en/sensor-setup.html>`_)
+
+======  ============  ==================
+Sensor    Location           Type
+======  ============  ==================
+Camera  Front-center  Sekonix-SF3325-100
+Camera  Front-left    Sekonix-SF3324-100
+Camera  Front-right   Sekonix-SF3324-100
+Camera  Side-left     Sekonix-SF3324-100
+Camera  Side-right    Sekonix-SF3324-100
+Camera  Rear-center   Sekonix-SF3324-100
+LiDAR   Front-center  Velodyne-VLP-16
+LiDAR   Front-left    Velodyne-VLP-16
+LiDAR   Front-right   Velodyne-VLP-16
+LiDAR   Rear-left     Velodyne-VLP-16
+LiDAR   Rear-right    Velodyne-VLP-16
+======  ============  ==================
+
+
+Driving Areas
+=============
+
+TODO
+

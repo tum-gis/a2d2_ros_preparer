@@ -1,0 +1,44 @@
+
+camera_sensors:
+  fieldnames:
+    image_timestamp: "cam_tstamp"
+
+  # if no meta information files are provided along to the image files, the times of each image can be estimated
+  # based on the lidar point cloud data
+  time_estimation:
+    lidar_timeframe_to_image_ratio: 0.625
+
+    validate_method: true
+    time_tolerance_sec: 5e-3
+
+
+bus_signals:
+  time_offset_tolerance: 0.001
+  altitude_offset: 45.28
+
+  fieldnames:
+    velocity: "vehicle_speed"
+
+    acceleration_x: "acceleration_x"
+    acceleration_y: "acceleration_y"
+    acceleration_z: "acceleration_z"
+
+    angular_velocity_x: "angular_velocity_omega_x"
+    angular_velocity_y: "angular_velocity_omega_y"
+    angular_velocity_z: "angular_velocity_omega_z"
+
+    latitude_degree: "latitude_degree"
+    longitude_degree: "longitude_degree"
+    altitude: "altitude"
+
+publish:
+  trajectory_publish_period_sec: 50e-3
+
+  tf_publish_period_sec: 500e-3
+  imu_publish_period_sec: 5e-3
+  lidar_publish_period_sec: 10e-3
+
+write:
+  lidar_data_xyz: false
+  lidar_data_rosbag: true
+  camera_data_rosbag: true
