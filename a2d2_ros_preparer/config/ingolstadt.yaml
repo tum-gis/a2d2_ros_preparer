@@ -1,9 +1,9 @@
 paths:
-  source_sensor_data_directory: "/home/benedikt/Documents/ArchiveWork/Datasets/a2d2.audi/Ingolstadt"
-  source_bus_signals_filepath: "/home/benedikt/Documents/ArchiveWork/Datasets/a2d2.audi/Ingolstadt/bus/20190401145936_bus_signals.json"
-  source_sensor_configuration_filepath: "/home/benedikt/Documents/ArchiveWork/Datasets/a2d2.audi/Ingolstadt/cams_lidars.json"
+  source_sensor_data_directory: "/path/to/ingolstadt"
+  source_bus_signals_filepath: "/path/to/ingolstadt/bus/20190401145936_bus_signals.json"
+  source_sensor_configuration_filepath: "/path/to/ingolstadt/cams_lidars.json"
 
-  target_directory: "/home/benedikt/Documents/ArchiveWork/Datasets/a2d2.audi/Ingolstadt_output"
+  target_directory: "/path/to/ingolstadt_output"
 
 filter:
   #start_timestamp: 1533906480
