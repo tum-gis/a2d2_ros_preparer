@@ -41,7 +41,14 @@ namespace a2d2_ros_preparer {
     }
 
     void Vehicle::WriteBusSignalsToGeoJSON(const std::filesystem::path& file_path, Duration time_delta, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp) {
-        bus_signals_timeseries_.WriteToGeojsonFile(file_path, time_delta, filter_start_timestamp, filter_stop_timestamp);
+        Time adjusted_start_timestamp = GetStartTimestamp();
+        if (filter_start_timestamp.has_value())
+            adjusted_start_timestamp = filter_start_timestamp.value();
+        auto adjusted_stop_timestamp = GetStopTimestamp();
+        if (filter_stop_timestamp.has_value())
+            adjusted_stop_timestamp = filter_stop_timestamp.value();
+
+        bus_signals_timeseries_.WriteToGeojsonFile(file_path, time_delta, adjusted_start_timestamp, adjusted_stop_timestamp);
     }
 
     void Vehicle::WriteTransformationDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp, Duration time_delta) {
