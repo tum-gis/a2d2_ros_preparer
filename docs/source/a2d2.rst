@@ -42,5 +42,37 @@ LiDAR   Rear-right    Velodyne-VLP-16
 Driving Areas
 =============
 
-TODO
+The GPS trajectories of the A2D2 datasets are visualized with a virtual globe using the `3DCityDB-Web-Map-Client`_.
+Open them by clicking on the images (Chrome is recommended).
 
+.. _3DCityDB-Web-Map-Client: https://github.com/3dcitydb/3dcitydb-web-map
+
+Munich
+^^^^^^
+
+.. figure:: ../assets/virtual_globe_munich.jpg
+  :align: center
+  :width: 100%
+  :target: https://3dcitydb.org/3dcitydb-web-map/1.9.1/3dwebclient/?t=Trajectories_Munich&s=false&ts=0&la=48.141064&lo=11.572938&h=961.691&hd=315.98&p=-40.87&r=359.82&l_0=u%3Dhttps%253A%252F%252Fbvv3d21.bayernwolke.de%252F3d-data%252Flatest%252Flod23d%252Ftileset.json%26n%3Dbuildings%26ld%3DCesium%25203D%2520Tiles%26lp%3D%26lc%3D%26gv%3D%26a%3Dtrue%26tdu%3Dhttps%253A%252F%252Fbsvr.gis.lrg.tum.de%252Fpostgrest%252Fgeomassendaten%26ds%3DPostgreSQL%26tt%3DHorizontal%26gc%3D%26il%3D%26al%3D%26ac%3D%26av%3D&l_1=u%3Dhttps%253A%252F%252Fwww.3dcitydb.org%252F3dcitydb%252Ffileadmin%252Fpublic%252F3dwebclientprojects%252Ftrajectories%252Fkml_trajectories_munich%252Fkml_trajectories_munich1_geometry_MasterJSON.json%26n%3Dtrajectories%26ld%3DCOLLADA%252FKML%252FglTF%26lp%3Dfalse%26lc%3Dfalse%26gv%3D2.0%26a%3Dtrue%26tdu%3D%26ds%3DPostgreSQL%26tt%3DHorizontal%26gc%3D%26il%3D125%26al%3D1.7976931348623157e%252B308%26ac%3D50%26av%3D200&bm=name%3Ddop80%26iconUrl%3D%26tooltip%3D%26url%3Dhttps%253A%252F%252Fgeoservices.bayern.de%252Fwms%252Fv2%252Fogc_dop80_oa.cgi%253F%26layers%3Dby_dop80c%26additionalParameters%3D%26proxyUrl%3D%252Fproxy%252F&tr=name%3Ddgm%26iconUrl%3D%26tooltip%3D%26url%3Dhttps%253A%252F%252Fbvv3d21.bayernwolke.de%252F3d-data%252Flatest%252Fterrain%252F&sw=
+
+  A2D2 trajectory of Munich
+
+Ingolstadt
+^^^^^^^^^^
+
+.. figure:: ../assets/virtual_globe_ingolstadt.jpg
+  :align: center
+  :width: 100%
+  :target: https://3dcitydb.org/3dcitydb-web-map/1.9.1/3dwebclient/?t=Trajectories_Ingolstadt&s=false&ts=0&la=48.764631&lo=11.419429&h=1090.009&hd=15.68&p=-73.72&r=0.19&l_0=u%3Dhttps%253A%252F%252Fbvv3d21.bayernwolke.de%252F3d-data%252Flatest%252Flod23d%252Ftileset.json%26n%3Dbuildings%26ld%3DCesium%25203D%2520Tiles%26lp%3D%26lc%3D%26gv%3D%26a%3Dtrue%26tdu%3Dhttps%253A%252F%252Fbsvr.gis.lrg.tum.de%252Fpostgrest%252Fgeomassendaten%26ds%3DPostgreSQL%26tt%3DHorizontal%26gc%3D%26il%3D%26al%3D%26ac%3D%26av%3D&l_1=u%3Dhttps%253A%252F%252Fwww.3dcitydb.org%252F3dcitydb%252Ffileadmin%252Fpublic%252F3dwebclientprojects%252Ftrajectories%252Fkml_trajectories_ingolstadt%252Fkml_trajectories_ingolstadt_geometry_MasterJSON.json%26n%3Dtrajectories_ingolstadt%26ld%3DCOLLADA%252FKML%252FglTF%26lp%3Dfalse%26lc%3Dfalse%26gv%3D2.0%26a%3Dtrue%26tdu%3D%26ds%3DPostgreSQL%26tt%3DHorizontal%26gc%3D%26il%3D125%26al%3D1.7976931348623157e%252B308%26ac%3D50%26av%3D200&bm=name%3Ddop80%26iconUrl%3D%26tooltip%3D%26url%3Dhttps%253A%252F%252Fgeoservices.bayern.de%252Fwms%252Fv2%252Fogc_dop80_oa.cgi%253F%26layers%3Dby_dop80c%26additionalParameters%3D%26proxyUrl%3D%252Fproxy%252F&tr=name%3Ddgm%26iconUrl%3D%26tooltip%3D%26url%3Dhttps%253A%252F%252Fbvv3d21.bayernwolke.de%252F3d-data%252Flatest%252Fterrain%252F&sw=showOnStart%3Dfalse
+
+  A2D2 trajectory of Ingolstadt
+
+Gaimersheim
+^^^^^^^^^^^
+
+.. figure:: ../assets/virtual_globe_gaimersheim.jpg
+  :align: center
+  :width: 100%
+  :target: https://3dcitydb.org/3dcitydb-web-map/1.9.1/3dwebclient/?t=Trajectories_Gaimersheim&s=false&ts=0&la=48.784119&lo=11.378512&h=925.537&hd=16.75&p=-50.16&r=0.09&l_0=u%3Dhttps%253A%252F%252Fbvv3d21.bayernwolke.de%252F3d-data%252Flatest%252Flod23d%252Ftileset.json%26n%3Dbuildings%26ld%3DCesium%25203D%2520Tiles%26lp%3D%26lc%3D%26gv%3D%26a%3Dtrue%26tdu%3Dhttps%253A%252F%252Fbsvr.gis.lrg.tum.de%252Fpostgrest%252Fgeomassendaten%26ds%3DPostgreSQL%26tt%3DHorizontal%26gc%3D%26il%3D%26al%3D%26ac%3D%26av%3D&l_1=u%3Dhttps%253A%252F%252Fwww.3dcitydb.org%252F3dcitydb%252Ffileadmin%252Fpublic%252F3dwebclientprojects%252Ftrajectories%252Fkml_trajcetories_gaimersheim%252Fkml_trajectories_gaimersheim_geometry_MasterJSON.json%26n%3Dtrajectories_gaimersheim%26ld%3DCOLLADA%252FKML%252FglTF%26lp%3Dfalse%26lc%3Dfalse%26gv%3D2.0%26a%3Dtrue%26tdu%3D%26ds%3DPostgreSQL%26tt%3DHorizontal%26gc%3D%26il%3D125%26al%3D1.7976931348623157e%252B308%26ac%3D50%26av%3D200&bm=name%3Ddop80%26iconUrl%3D%26tooltip%3D%26url%3Dhttps%253A%252F%252Fgeoservices.bayern.de%252Fwms%252Fv2%252Fogc_dop80_oa.cgi%253F%26layers%3Dby_dop80c%26additionalParameters%3D%26proxyUrl%3D%252Fproxy%252F&tr=name%3Ddgm%26iconUrl%3D%26tooltip%3D%26url%3Dhttps%253A%252F%252Fbvv3d21.bayernwolke.de%252F3d-data%252Flatest%252Fterrain%252F&sw=showOnStart%3Dfalse
+
+  A2D2 trajectory of Gaimersheim
