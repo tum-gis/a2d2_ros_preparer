@@ -9,24 +9,16 @@
       <geometry>
         <box size="5.0 2.5 0.9"/>
       </geometry>
-      <material name="gray"/>
       <origin rpy="0 0 0" xyz="1 0 -0.3"/>
+      <material name="gray"/>
     </visual>
-  </link>
-
-  <link name="upper_link">
     <visual>
       <geometry>
         <box size="3.2 2.5 0.6"/>
       </geometry>
+      <origin rpy="0 0 0" xyz="0.25 0 0.45"/>
       <material name="gray"/>
     </visual>
   </link>
-
-  <joint name="base_to_upper" type="fixed">
-    <parent link="base_link"/>
-    <child link="upper_link"/>
-    <origin rpy="0 0 0" xyz="0.25 0 0.45"/>
-  </joint>
 
 </robot>
