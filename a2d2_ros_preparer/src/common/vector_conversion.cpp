@@ -15,8 +15,9 @@
  */
 
 
-#include <glog/logging.h>
 #include "vector_conversion.h"
+
+#include <glog/logging.h>
 
 namespace a2d2_ros_preparer {
 
