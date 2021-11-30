@@ -36,16 +36,18 @@ namespace a2d2_ros_preparer {
         void SetSourceBusSignalsFilepath(const std::filesystem::path& path) { source_bus_signals_filepath_ = path; };
         void SetSourceSensorConfigurationFilepath(const std::filesystem::path& path) { source_sensor_configuration_filepath_ = path; };
         void SetTargetDirectory(const std::filesystem::path& path) { target_directory_ = path; };
+        void SetTargetTrajectoriesSubdirectory(const std::string& name) { target_trajectories_subdirectory_name_ = name; }
 
         [[nodiscard]] std::filesystem::path source_sensor_data_directory() const { return source_sensor_data_directory_; }
         [[nodiscard]] std::filesystem::path source_bus_signals_filepath() const;
         [[nodiscard]] std::filesystem::path source_sensor_configuration_filepath() const;
 
         [[nodiscard]] std::filesystem::path target_directory() const { return target_directory_; }
-        [[nodiscard]] std::filesystem::path target_geojson_complete_filepath() const { return target_directory() / (target_project_name_ + "_trajectory_complete.geojson"); }
-        [[nodiscard]] std::filesystem::path target_geojson_filepath() const { return target_directory() / (target_project_name_ + "_trajectory.geojson"); }
-        [[nodiscard]] std::filesystem::path target_xyz_directory() const { return target_directory() / (target_project_name_ + "_xyz"); }
-        [[nodiscard]] std::filesystem::path target_rosbag_filepath() const { return target_directory() / (target_project_name_ + ".bag"); }
+        [[nodiscard]] std::filesystem::path target_trajectories_directory() const { return target_directory_ / target_trajectories_subdirectory_name_; }
+        [[nodiscard]] std::filesystem::path target_trajectories_geojson_complete_filepath() const { return target_trajectories_directory() / "bus_signals_trajectory_complete.geojson"; }
+        [[nodiscard]] std::filesystem::path target_trajectories_geojson_filtered_filepath() const { return target_trajectories_directory() / "bus_signals_trajectory_filtered.geojson"; }
+        [[nodiscard]] std::filesystem::path target_rosbag_filepath() const { return target_directory() / "driving_dataset.bag"; }
+        [[nodiscard]] std::filesystem::path target_sensor_lidar_directory() const { return target_directory() / "driving_dataset_sensor_lidar"; }
 
         // filter
         void SetFilterStartTimestamp(double start_timestamp);
@@ -126,7 +128,7 @@ namespace a2d2_ros_preparer {
         std::optional<std::filesystem::path> source_sensor_configuration_filepath_;
 
         std::filesystem::path target_directory_;
-        std::string target_project_name_ = "driving_data";
+        std::string target_trajectories_subdirectory_name_ = "";
 
         // filter
         std::optional<Time> filter_start_timestamp_ = {};

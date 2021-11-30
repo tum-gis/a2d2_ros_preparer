@@ -30,10 +30,10 @@ namespace a2d2_ros_preparer {
 
         auto vehicle = Read(options);
 
-        vehicle.WriteBusSignalsToGeoJSON(options.target_geojson_filepath(), options.trajectory_publish_period(), options.filter_start_timestamp(), options.filter_stop_timestamp());
+        vehicle.WriteBusSignalsToGeoJSON(options.target_trajectories_geojson_filtered_filepath(), options.trajectory_publish_period(), options.filter_start_timestamp(), options.filter_stop_timestamp());
 
         if (options.write_lidar_data_xyz())
-            vehicle.WriteLidarDataToXYZ(options.target_xyz_directory(), options.filter_start_timestamp(), options.filter_stop_timestamp(), options.lidar_publish_period());
+            vehicle.WriteLidarDataToXYZ(options.target_sensor_lidar_directory(), options.filter_start_timestamp(), options.filter_stop_timestamp(), options.lidar_publish_period());
 
         WriteRosbag(options, vehicle);
     }
@@ -54,7 +54,7 @@ namespace a2d2_ros_preparer {
         LOG(INFO) << "Identified time to rectime offset of " << ToSeconds(time_rectime_offset) << "s";
 
         auto bus_signal_stream = BusSignalStream(options, time_rectime_offset);
-        bus_signal_stream.WriteToGeojsonFile(options.target_geojson_complete_filepath(), options.trajectory_publish_period());
+        bus_signal_stream.WriteToGeojsonFile(options.target_trajectories_geojson_complete_filepath(), options.trajectory_publish_period());
 
 
         auto camera_image_stream = CameraImageStream(vehicle_configuration.GetCameraDataDirectoryPath(),

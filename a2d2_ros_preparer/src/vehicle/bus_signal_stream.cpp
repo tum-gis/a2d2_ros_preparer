@@ -216,6 +216,7 @@ namespace a2d2_ros_preparer {
             current_time += time_delta;
         }
 
+        std::filesystem::create_directory(file_path.parent_path());
         std::ofstream output(file_path);
         output << std::setprecision(std::numeric_limits<double>::digits10 + 2);
         output << std::setw(4) << geojson << std::endl;

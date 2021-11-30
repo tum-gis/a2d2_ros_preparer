@@ -48,6 +48,8 @@ namespace a2d2_ros_preparer {
 
         if (node.hasParam(prefix + "/target_directory"))
             options.SetTargetDirectory(GetParam<std::string>(node, prefix + "/target_directory"));
+        if (node.hasParam(prefix + "/target_trajectories_subdirectory"))
+            options.SetTargetTrajectoriesSubdirectory(GetParam<std::string>(node, prefix + "/target_trajectories_subdirectory"));
 
     }
 
