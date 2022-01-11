@@ -42,13 +42,15 @@ namespace a2d2_ros_preparer {
                           const double& time_estimation_lidar_timeframe_to_image_ratio,
                           const std::optional<Duration>& time_estimation_time_tolerance);
 
-        void WriteCameraDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier, const std::vector<DataSequenceId>& sequence_ids);
+        void WriteDistortedCameraDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier, const std::vector<DataSequenceId>& sequence_ids);
+        void WriteRectifiedCameraDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier, const std::vector<DataSequenceId>& sequence_ids);
+
+        void WriteCameraInfoDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier, const std::vector<DataSequenceId>& sequence_ids);
 
         [[nodiscard]] std::vector<CameraDirectionIdentifier> GetCameraIdentifiers() const;
 
     private:
         std::map<CameraDirectionIdentifier, CameraImageTimeseriesPerView> camera_image_timeseries_per_view_;
-        std::map<CameraDirectionIdentifier, CameraConfiguration> camera_configurations_;
     };
 }
 

@@ -32,8 +32,7 @@ namespace a2d2_ros_preparer {
                                          const Duration& time_offset,
                                          const std::string& field_name_image_time,
                                          const double& time_estimation_lidar_timeframe_to_image_ratio,
-                                         const std::optional<Duration>& time_estimation_time_tolerance):
-                                         camera_configurations_(std::move(camera_configurations)) {
+                                         const std::optional<Duration>& time_estimation_time_tolerance) {
 
         if (!exists(camera_data_directory)) {
             LOG(WARNING) << "No camera data directory found at " << camera_data_directory;
@@ -48,6 +47,7 @@ namespace a2d2_ros_preparer {
                 continue;
             }
 
+            const auto& camera_configuration = camera_configurations.at(current_camera_identifier);
             const auto& data_sequence_time_mins = data_sequence_time_mins_per_view.at(current_camera_identifier);
             const auto& data_sequence_time_maxs = data_sequence_time_maxs_per_view.at(current_camera_identifier);
 
@@ -59,7 +59,8 @@ namespace a2d2_ros_preparer {
                                                            time_offset,
                                                            field_name_image_time,
                                                            time_estimation_lidar_timeframe_to_image_ratio,
-                                                           time_estimation_time_tolerance);
+                                                           time_estimation_time_tolerance,
+                                                           camera_configuration);
 
             camera_image_timeseries_per_view_.insert(std::make_pair(current_camera_identifier, timeseries));
         }
@@ -72,23 +73,40 @@ namespace a2d2_ros_preparer {
         return camera_identifiers;
     }
 
-    void CameraImageStream::WriteCameraDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier,
+    void CameraImageStream::WriteDistortedCameraDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier,
                                                     const std::vector<DataSequenceId>& sequence_ids) {
-
         if (camera_image_timeseries_per_view_.count(camera_identifier) == 0)
             return;
 
         auto camera_image_timeseries = camera_image_timeseries_per_view_.at(camera_identifier);
-        auto camera_configuration = camera_configurations_.at(camera_identifier);
-
         for (auto current_sequence_id: sequence_ids) {
-
-            auto image_message = camera_image_timeseries.GetImage(current_sequence_id);
-            bag.write("/camera_" + camera_identifier + "/image_color", image_message->header.stamp, image_message);
-
-            auto camera_info_message = camera_configuration.GetRosMessage();
-            camera_info_message.header = image_message->header;
-            bag.write("/camera_" + camera_identifier + "/camera_info", image_message->header.stamp, camera_info_message);
+            auto image_message = camera_image_timeseries.GetOriginalImageMessage(current_sequence_id);
+            bag.write("/camera_" + camera_identifier + "/rgb/image_color", image_message->header.stamp, image_message);
         }
     }
+
+    void CameraImageStream::WriteRectifiedCameraDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier,
+                                                             const std::vector<DataSequenceId>& sequence_ids) {
+        if (camera_image_timeseries_per_view_.count(camera_identifier) == 0)
+            return;
+
+        auto camera_image_timeseries = camera_image_timeseries_per_view_.at(camera_identifier);
+        for (auto current_sequence_id: sequence_ids) {
+            auto image_message = camera_image_timeseries.GetRectifiedImageMessage(current_sequence_id);
+            bag.write("/camera_" + camera_identifier + "/rgb/image_rect_color", image_message->header.stamp, image_message);
+        }
+    }
+
+    void CameraImageStream::WriteCameraInfoDataToRosbag(rosbag::Bag &bag, const CameraDirectionIdentifier& camera_identifier,
+                                                             const std::vector<DataSequenceId>& sequence_ids) {
+        if (camera_image_timeseries_per_view_.count(camera_identifier) == 0)
+            return;
+
+        auto camera_image_timeseries = camera_image_timeseries_per_view_.at(camera_identifier);
+        for (auto current_sequence_id: sequence_ids) {
+            auto camera_info_message = camera_image_timeseries.GetCameraInfoMessage(current_sequence_id);
+            bag.write("/camera_" + camera_identifier + "/rgb/camera_info", camera_info_message.header.stamp, camera_info_message);
+        }
+    }
+
 }

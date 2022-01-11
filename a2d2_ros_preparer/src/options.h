@@ -112,11 +112,13 @@ namespace a2d2_ros_preparer {
         // write
         void SetWriteLidarDataXYZ(bool write_lidar_data_xyz) { write_lidar_data_xyz_ = write_lidar_data_xyz; };
         void SetWriteLidarDataRosbag(bool write_lidar_data_rosbag) { write_lidar_data_rosbag_ = write_lidar_data_rosbag; };
-        void SetWriteCameraDataRosbag(bool write_camera_data_rosbag) { write_camera_data_rosbag_ = write_camera_data_rosbag; };
+        void SetWriteDistortedCameraDataRosbag(bool write_distorted_camera_data_rosbag) { write_distorted_camera_data_rosbag_ = write_distorted_camera_data_rosbag; };
+        void SetWriteRectifiedCameraDataRosbag(bool write_rectified_camera_data_rosbag) { write_rectified_camera_data_rosbag_ = write_rectified_camera_data_rosbag; };
 
         [[nodiscard]] bool write_lidar_data_xyz() const { return write_lidar_data_xyz_; }
         [[nodiscard]] bool write_lidar_data_rosbag() const { return write_lidar_data_rosbag_; }
-        [[nodiscard]] bool write_camera_data_rosbag() const { return write_camera_data_rosbag_; }
+        [[nodiscard]] bool write_distorted_camera_data_rosbag() const { return write_distorted_camera_data_rosbag_; }
+        [[nodiscard]] bool write_rectified_camera_data_rosbag() const { return write_rectified_camera_data_rosbag_; }
 
         // validate
         void ValidateAndPrepare() const;
@@ -166,7 +168,8 @@ namespace a2d2_ros_preparer {
         // write
         bool write_lidar_data_xyz_ = false;
         bool write_lidar_data_rosbag_ = true;
-        bool write_camera_data_rosbag_ = true;
+        bool write_distorted_camera_data_rosbag_ = false;
+        bool write_rectified_camera_data_rosbag_ = true;
     };
 }
 

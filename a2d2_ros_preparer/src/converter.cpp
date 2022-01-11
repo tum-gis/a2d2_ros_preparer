@@ -88,8 +88,13 @@ namespace a2d2_ros_preparer {
 
         if (options.write_lidar_data_rosbag())
             vehicle.WriteLidarDataToRosbag(bag, options.filter_start_timestamp(), options.filter_stop_timestamp(), options.lidar_publish_period());
-        if (options.write_camera_data_rosbag())
-            vehicle.WriteCameraDataToRosbag(bag, options.filter_start_timestamp(), options.filter_stop_timestamp());
+        if (options.write_distorted_camera_data_rosbag())
+            vehicle.WriteDistortedCameraDataToRosbag(bag, options.filter_start_timestamp(), options.filter_stop_timestamp());
+        if (options.write_rectified_camera_data_rosbag())
+            vehicle.WriteRectifiedCameraDataToRosbag(bag, options.filter_start_timestamp(), options.filter_stop_timestamp());
+        if (options.write_distorted_camera_data_rosbag() || options.write_rectified_camera_data_rosbag())
+            vehicle.WriteCameraInfoDataToRosbag(bag, options.filter_start_timestamp(), options.filter_stop_timestamp());
+
         bag.close();
     }
 

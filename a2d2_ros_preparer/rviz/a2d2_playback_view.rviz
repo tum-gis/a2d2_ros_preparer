@@ -288,7 +288,7 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: true
       Image Rendering: background and overlay
-      Image Topic: /camera_front_center/image_color
+      Image Topic: /camera_front_center/rgb/image_rect_color
       Name: "Camera: front_center"
       Overlay Alpha: 0.5
       Queue Size: 2
@@ -316,7 +316,7 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: true
       Image Rendering: background and overlay
-      Image Topic: /camera_front_left/image_color
+      Image Topic: /camera_front_left/rgb/image_rect_color
       Name: "Camera: front_left"
       Overlay Alpha: 0.5
       Queue Size: 2
@@ -344,7 +344,7 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: true
       Image Rendering: background and overlay
-      Image Topic: /camera_front_right/image_color
+      Image Topic: /camera_front_right/rgb/image_rect_color
       Name: "Camera: front_right"
       Overlay Alpha: 0.5
       Queue Size: 2
@@ -372,7 +372,7 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: false
       Image Rendering: background and overlay
-      Image Topic: /camera_side_left/image_color
+      Image Topic: /camera_side_left/rgb/image_rect_color
       Name: "Camera: side_left"
       Overlay Alpha: 0.5
       Queue Size: 2
@@ -400,7 +400,7 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: false
       Image Rendering: background and overlay
-      Image Topic: /camera_side_right/image_color
+      Image Topic: /camera_side_right/rgb/image_rect_color
       Name: "Camera: side_right"
       Overlay Alpha: 0.5
       Queue Size: 2
@@ -428,7 +428,7 @@ Visualization Manager:
     - Class: rviz/Camera
       Enabled: false
       Image Rendering: background and overlay
-      Image Topic: /camera_rear_center/image_color
+      Image Topic: /camera_rear_center/rgb/image_rect_color
       Name: "Camera: rear_center"
       Overlay Alpha: 0.5
       Queue Size: 2

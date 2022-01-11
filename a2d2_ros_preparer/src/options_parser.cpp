@@ -130,7 +130,9 @@ namespace a2d2_ros_preparer {
             options.SetWriteLidarDataXYZ(GetParam<bool>(node, prefix + "/lidar_data_xyz"));
         if (node.hasParam(prefix + "/lidar_data_rosbag"))
             options.SetWriteLidarDataRosbag(GetParam<bool>(node, prefix + "/lidar_data_rosbag"));
-        if (node.hasParam(prefix + "/camera_data_rosbag"))
-            options.SetWriteCameraDataRosbag(GetParam<bool>(node, prefix + "/camera_data_rosbag"));
+        if (node.hasParam(prefix + "/distorted_camera_data_rosbag"))
+            options.SetWriteDistortedCameraDataRosbag(GetParam<bool>(node, prefix + "/distorted_camera_data_rosbag"));
+        if (node.hasParam(prefix + "/rectified_camera_data_rosbag"))
+            options.SetWriteRectifiedCameraDataRosbag(GetParam<bool>(node, prefix + "/rectified_camera_data_rosbag"));
     }
 }

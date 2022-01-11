@@ -21,8 +21,10 @@
 #include <cv_bridge/cv_bridge.h>
 #include <glog/logging.h>
 #include <sensor_msgs/image_encodings.h>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/opencv.hpp>
+#include <opencv2/core/eigen.hpp>
+#include <utility>
 #include "../common/utility.h"
 
 namespace a2d2_ros_preparer {
@@ -34,8 +36,10 @@ namespace a2d2_ros_preparer {
                                                                const Duration& time_offset,
                                                                const std::string& field_name_image_time,
                                                                const double& image_time_estimation_ratio,
-                                                               const std::optional<Duration>& time_estimation_time_tolerance):
-                                                               frame_id_(frame_id) {
+                                                               const std::optional<Duration>& time_estimation_time_tolerance,
+                                                               CameraConfiguration  camera_configuration):
+                                                               frame_id_(frame_id),
+                                                               camera_configuration_(std::move(camera_configuration)) {
         CHECK_EQ(data_sequence_time_mins.size(), data_sequence_time_maxs.size()) << "Time mins and time maxs of data sequence must have the same size";
         CHECK(std::equal(data_sequence_time_mins.begin(), data_sequence_time_mins.end(), data_sequence_time_maxs.begin(),
                          [] (auto a, auto b) { return a.first == b.first; })) << "Time mins and time maxs must be available for the same sequence ids";
@@ -121,16 +125,48 @@ namespace a2d2_ros_preparer {
         }
     }
 
-    sensor_msgs::ImagePtr CameraImageTimeseriesPerView::GetImage(DataSequenceId sequence_id) {
+    sensor_msgs::ImagePtr CameraImageTimeseriesPerView::GetOriginalImageMessage(DataSequenceId sequence_id) {
+        auto header = GetPreparedImageMessageHeader(sequence_id);
+
         auto filepath = image_filepaths_.at(sequence_id);
+        cv::Mat src_image = cv::imread(filepath);
 
-        cv::Mat image = cv::imread(filepath);
+        return cv_bridge::CvImage(header, "bgr8", src_image).toImageMsg();
+    }
 
+    sensor_msgs::ImagePtr CameraImageTimeseriesPerView::GetRectifiedImageMessage(DataSequenceId sequence_id) {
+        auto header = GetPreparedImageMessageHeader(sequence_id);
+
+        auto filepath = image_filepaths_.at(sequence_id);
+        cv::Mat src_image = cv::imread(filepath);
+        cv::Mat undistorted_image;
+
+        cv::Mat cam_matrix_original_cv(3, 3, CV_64F);
+        cv::eigen2cv(camera_configuration_.GetCameraMatrixOriginal(), cam_matrix_original_cv);
+        cv::Mat cam_matrix_cv(3, 3, CV_64F);
+        cv::eigen2cv(camera_configuration_.GetCameraMatrix(), cam_matrix_cv);
+        cv::Mat distortion(static_cast<int>(camera_configuration_.GetDistortion().size()), 1, CV_64F);
+        cv::eigen2cv(camera_configuration_.GetDistortionEigen(), distortion);
+
+        if (camera_configuration_.GetLensType() == CameraLensType::TELECAM)
+            cv::undistort(src_image, undistorted_image, cam_matrix_original_cv, distortion, cam_matrix_cv);
+        else
+            cv::fisheye::undistortImage(src_image, undistorted_image, cam_matrix_original_cv, distortion, cam_matrix_cv);
+
+        return cv_bridge::CvImage(header, "bgr8", undistorted_image).toImageMsg();
+    }
+
+    sensor_msgs::CameraInfo CameraImageTimeseriesPerView::GetCameraInfoMessage(DataSequenceId sequence_id) {
+        std::string frame_id = "camera_" + frame_id_;
+        ros::Time stamp = ToRosTime(image_times_.at(sequence_id));
+
+        return camera_configuration_.GetCameraInfoMessage(frame_id, stamp);
+    }
+
+    std_msgs::Header CameraImageTimeseriesPerView::GetPreparedImageMessageHeader(DataSequenceId sequence_id) {
         auto header = std_msgs::Header();
         header.frame_id = "camera_" + frame_id_;
         header.stamp = ToRosTime(image_times_.at(sequence_id));
-
-        sensor_msgs::ImagePtr message = cv_bridge::CvImage(header, "bgr8", image).toImageMsg();
-        return message;
+        return header;
     }
 }

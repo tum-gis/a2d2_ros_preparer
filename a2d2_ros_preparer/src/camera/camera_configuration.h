@@ -23,23 +23,42 @@
 
 namespace a2d2_ros_preparer {
 
+    enum class CameraLensType {
+        TELECAM,
+        FISHEYE
+    };
+
     class CameraConfiguration {
 
     public:
         CameraConfiguration(uint32_t width, uint32_t height,
-                            std::vector<double> distortion,
-                            Eigen::Matrix3d  intrinsic_camera_matrix,
-                            Eigen::MatrixXd  projection_camera_matrix);
+                            CameraLensType lens_type,
+                            Eigen::Matrix3d& camera_matrix,
+                            Eigen::Matrix3d& camera_matrix_original,
+                            std::vector<double>& distortion):
+                            width_(width),
+                            height_(height),
+                            lens_type_(lens_type),
+                            camera_matrix_(camera_matrix),
+                            camera_matrix_original_(camera_matrix_original) {};
 
-        sensor_msgs::CameraInfo GetRosMessage();
+        [[nodiscard]] sensor_msgs::CameraInfo GetCameraInfoMessage(std::string& frame_id, ros::Time& stamp) const;
+
+        [[nodiscard]] CameraLensType GetLensType() const { return lens_type_; };
+        [[nodiscard]] Eigen::Matrix3d GetCameraMatrix() const { return camera_matrix_; };
+        [[nodiscard]] Eigen::Matrix3d GetCameraMatrixOriginal() const { return camera_matrix_original_; };
+        [[nodiscard]] std::vector<double> GetDistortion() const { return distortion_; };
+        [[nodiscard]] Eigen::VectorXd GetDistortionEigen() const;
 
     private:
         uint32_t width_;
         uint32_t height_;
 
+        CameraLensType lens_type_;
+
+        Eigen::Matrix3d camera_matrix_;
+        Eigen::Matrix3d camera_matrix_original_;
         std::vector<double> distortion_;
-        Eigen::Matrix3d intrinsic_camera_matrix_;
-        Eigen::MatrixXd projection_camera_matrix_;
     };
 
 }

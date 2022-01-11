@@ -22,25 +22,28 @@
 
 namespace a2d2_ros_preparer {
 
-    CameraConfiguration::CameraConfiguration(uint32_t width, uint32_t height,
-                                             std::vector<double> distortion,
-                                             Eigen::Matrix3d  intrinsic_camera_matrix,
-                                             Eigen::MatrixXd  projection_camera_matrix):
-                                             width_(width), height_(height),
-                                             distortion_(std::move(distortion)),
-                                             intrinsic_camera_matrix_(std::move(intrinsic_camera_matrix)),
-                                             projection_camera_matrix_(std::move(projection_camera_matrix)) {};
+    sensor_msgs::CameraInfo CameraConfiguration::GetCameraInfoMessage(std::string& frame_id, ros::Time& stamp) const {
+        auto header = std_msgs::Header();
+        header.frame_id = frame_id;
+        header.stamp = stamp;
 
-    sensor_msgs::CameraInfo CameraConfiguration::GetRosMessage() {
         auto message = sensor_msgs::CameraInfo();
-
+        message.header = header;
         message.width = width_;
         message.height = height_;
 
-        message.D = distortion_;
-        message.K = ToBoostArray9d(intrinsic_camera_matrix_);
-        message.P = ToBoostArray12d(projection_camera_matrix_);
+        message.distortion_model = "plumb_bob";
+        message.D = GetDistortion();
+        message.K = ToBoostArray9d(camera_matrix_original_);
+        Eigen::Matrix<double, 3, 4> projection_camera_matrix = Eigen::MatrixXd::Zero(3, 4);
+        projection_camera_matrix.block<3,3>(0,0) = camera_matrix_;
+        message.P = ToBoostArray12d(projection_camera_matrix);
 
         return message;
+    }
+
+    Eigen::VectorXd CameraConfiguration::GetDistortionEigen() const {
+        auto distortion = GetDistortion();
+        return Eigen::Map<Eigen::VectorXd, Eigen::Unaligned>(distortion.data(), static_cast<int>(distortion.size()));
     }
 }

@@ -174,20 +174,24 @@ namespace a2d2_ros_preparer {
     CameraConfiguration VehicleConfiguration::GetCameraConfiguration(const CameraDirectionIdentifier& camera_identifier) {
         auto camera_config_json = sensor_configuration_json_["cameras"][camera_identifier];
 
-        auto distortion = camera_config_json["Distortion"][0].get<std::vector<double>>();
-
-        Eigen::Matrix3d camera_matrix = ToEigenMatrix3d(camera_config_json["CamMatrix"]);
-        Eigen::Matrix<double, 3, 4> m = Eigen::MatrixXd::Zero(3, 4);
-        m.block<3,3>(0,0) = camera_matrix;
-        Eigen::Matrix<double, 3, 4> projection_camera_matrix = m;
-
-        Eigen::Matrix3d intrinsic_camera_matrix = ToEigenMatrix3d(camera_config_json["CamMatrixOriginal"]);
-
         uint32_t width = camera_config_json["Resolution"][0];
         uint32_t height = camera_config_json["Resolution"][1];
 
-        auto config = CameraConfiguration(width, height, distortion, intrinsic_camera_matrix, projection_camera_matrix);
-        return config;
+        CameraLensType camera_lens_type = CameraLensType::TELECAM;
+        std::string lens_type_string = camera_config_json["Lens"];
+        if (lens_type_string == "Telecam")
+            camera_lens_type = CameraLensType::TELECAM;
+        else if (lens_type_string == "Fisheye")
+            camera_lens_type = CameraLensType::FISHEYE;
+        else
+            LOG(WARNING) << "Unknown lens type in configuration (" << lens_type_string << "). Defaulting to telecam.";
+
+
+        Eigen::Matrix3d camera_matrix = ToEigenMatrix3d(camera_config_json["CamMatrix"]);
+        Eigen::Matrix3d camera_matrix_original = ToEigenMatrix3d(camera_config_json["CamMatrixOriginal"]);
+        auto distortion_std = camera_config_json["Distortion"][0].get<std::vector<double>>();
+
+        return CameraConfiguration(width, height, camera_lens_type, camera_matrix, camera_matrix_original, distortion_std);
     }
 
     std::map<CameraDirectionIdentifier, CameraConfiguration> VehicleConfiguration::GetCameraConfigurations() {

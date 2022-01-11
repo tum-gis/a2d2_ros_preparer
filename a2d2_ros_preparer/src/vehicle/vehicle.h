@@ -55,7 +55,10 @@ namespace a2d2_ros_preparer {
         void WriteNavSatDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp, Duration time_delta);
         void WriteOdometryDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp, Duration time_delta);
         void WriteLidarDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp, Duration time_delta);
-        void WriteCameraDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp);
+
+        void WriteDistortedCameraDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp);
+        void WriteRectifiedCameraDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp);
+        void WriteCameraInfoDataToRosbag(rosbag::Bag& bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp);
 
     private:
         VehicleConfiguration vehicle_configuration_;

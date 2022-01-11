@@ -41,4 +41,5 @@ publish:
 write:
   lidar_data_xyz: false
   lidar_data_rosbag: true
-  camera_data_rosbag: true
+  distorted_camera_data_rosbag: false
+  rectified_camera_data_rosbag: true

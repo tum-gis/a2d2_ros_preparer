@@ -23,6 +23,7 @@
 #include <sensor_msgs/Image.h>
 #include "../common/types.h"
 #include "../common/timing.h"
+#include "camera_configuration.h"
 
 namespace a2d2_ros_preparer {
 
@@ -35,14 +36,21 @@ namespace a2d2_ros_preparer {
                                               const Duration& time_offset,
                                               const std::string& field_name_image_time,
                                               const double& time_estimation_lidar_timeframe_to_image_ratio,
-                                              const std::optional<Duration>& time_estimation_time_tolerance);
+                                              const std::optional<Duration>& time_estimation_time_tolerance,
+                                              CameraConfiguration  camera_configuration);
 
-        sensor_msgs::ImagePtr GetImage(DataSequenceId sequence_id);
+        sensor_msgs::ImagePtr GetOriginalImageMessage(DataSequenceId sequence_id);
+        sensor_msgs::ImagePtr GetRectifiedImageMessage(DataSequenceId sequence_id);
+
+        sensor_msgs::CameraInfo GetCameraInfoMessage(DataSequenceId sequence_id);
 
     private:
         std::string frame_id_;
         std::map<DataSequenceId, std::filesystem::path> image_filepaths_;
         std::map<DataSequenceId, Time> image_times_;
+        const CameraConfiguration camera_configuration_;
+
+        std_msgs::Header GetPreparedImageMessageHeader(DataSequenceId sequence_id);
     };
 }
 

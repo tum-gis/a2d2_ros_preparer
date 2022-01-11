@@ -129,7 +129,7 @@ namespace a2d2_ros_preparer {
 
         Time current_timestamp = valid_start_timestamp;
 
-        unsigned int count = 0;
+        unsigned int count = 1;
         unsigned int complete = (valid_stop_timestamp-valid_start_timestamp)/ time_delta;
         int complete_digits = std::to_string(complete).length();
 
@@ -154,7 +154,7 @@ namespace a2d2_ros_preparer {
 
         Time current_timestamp = valid_start_timestamp;
 
-        unsigned int count = 0;
+        unsigned int count = 1;
         unsigned int complete = (valid_stop_timestamp-valid_start_timestamp)/ time_delta;
 
         while (current_timestamp < valid_stop_timestamp) {
@@ -169,16 +169,37 @@ namespace a2d2_ros_preparer {
 
     }
 
-    void Vehicle::WriteCameraDataToRosbag(rosbag::Bag &bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp) {
+    void Vehicle::WriteDistortedCameraDataToRosbag(rosbag::Bag &bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp) {
         auto valid_start_timestamp = GetValidStartTimestamp(filter_start_timestamp);
         auto valid_stop_timestamp = GetValidStopTimestamp(filter_stop_timestamp);
 
         for (const auto& current_camera_identifier: camera_image_stream_.GetCameraIdentifiers()) {
-            LOG(INFO) << "Writing images for camera '" << current_camera_identifier << "'";
+            LOG(INFO) << "Writing distorted images for camera '" << current_camera_identifier << "'";
             auto sequence_ids = lidar_scan_stream_.GetAllDataSequenceIds(current_camera_identifier, valid_start_timestamp, valid_stop_timestamp);
-            camera_image_stream_.WriteCameraDataToRosbag(bag, current_camera_identifier, sequence_ids);
+            camera_image_stream_.WriteDistortedCameraDataToRosbag(bag, current_camera_identifier, sequence_ids);
         }
+    }
 
+    void Vehicle::WriteRectifiedCameraDataToRosbag(rosbag::Bag &bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp) {
+        auto valid_start_timestamp = GetValidStartTimestamp(filter_start_timestamp);
+        auto valid_stop_timestamp = GetValidStopTimestamp(filter_stop_timestamp);
+
+        for (const auto& current_camera_identifier: camera_image_stream_.GetCameraIdentifiers()) {
+            LOG(INFO) << "Writing rectified images for camera '" << current_camera_identifier << "'";
+            auto sequence_ids = lidar_scan_stream_.GetAllDataSequenceIds(current_camera_identifier, valid_start_timestamp, valid_stop_timestamp);
+            camera_image_stream_.WriteRectifiedCameraDataToRosbag(bag, current_camera_identifier, sequence_ids);
+        }
+    }
+
+    void Vehicle::WriteCameraInfoDataToRosbag(rosbag::Bag &bag, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp) {
+        auto valid_start_timestamp = GetValidStartTimestamp(filter_start_timestamp);
+        auto valid_stop_timestamp = GetValidStopTimestamp(filter_stop_timestamp);
+
+        for (const auto& current_camera_identifier: camera_image_stream_.GetCameraIdentifiers()) {
+            LOG(INFO) << "Writing camera info data for camera '" << current_camera_identifier << "'";
+            auto sequence_ids = lidar_scan_stream_.GetAllDataSequenceIds(current_camera_identifier, valid_start_timestamp, valid_stop_timestamp);
+            camera_image_stream_.WriteCameraInfoDataToRosbag(bag, current_camera_identifier, sequence_ids);
+        }
     }
 
     Time Vehicle::GetValidStartTimestamp(std::optional<Time> filter_start_timestamp) {
