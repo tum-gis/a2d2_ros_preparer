@@ -34,16 +34,19 @@ namespace a2d2_ros_preparer {
         return ros_point_cloud_msg;
     }
 
-    pcl::PointCloud<pcl::PointXYZ> TimedPointCloudData::ToPcl() {
+    pcl::PointCloud<pcl::PointXYZI> TimedPointCloudData::ToPcl() {
 
-        pcl::PointCloud<pcl::PointXYZ> pcl_point_cloud;
+        pcl::PointCloud<pcl::PointXYZI> pcl_point_cloud;
         pcl_point_cloud.height = 1;
         pcl_point_cloud.width = size();
 
         for (const auto &timed_point : ranges_) {
-            pcl::PointXYZ pcl_point = pcl::PointXYZ(static_cast<float>(timed_point.position.x()),
-                                                    static_cast<float>(timed_point.position.y()),
-                                                    static_cast<float>(timed_point.position.z()));
+            pcl::PointXYZI pcl_point = pcl::PointXYZI();
+            pcl_point.x = static_cast<float>(timed_point.position.x());
+            pcl_point.y = static_cast<float>(timed_point.position.y());
+            pcl_point.z = static_cast<float>(timed_point.position.z());
+            pcl_point.intensity = static_cast<float>(timed_point.intensity);
+
             pcl_point_cloud.push_back(pcl_point);
         }
 

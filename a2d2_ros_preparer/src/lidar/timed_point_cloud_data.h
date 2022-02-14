@@ -59,7 +59,7 @@ namespace a2d2_ros_preparer {
         [[nodiscard]] Time GetMinMaxMiddleTime() const;
         [[nodiscard]] Duration GetTimeRectimeOffsetMedian() const;
 
-        pcl::PointCloud<pcl::PointXYZ> ToPcl();
+        pcl::PointCloud<pcl::PointXYZI> ToPcl();
         sensor_msgs::PointCloud2 ToRos();
 
     private:
