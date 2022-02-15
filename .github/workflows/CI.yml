@@ -2,12 +2,22 @@ name: CI
 
 on: [push, pull_request]
 
+# forcefully install ros-noetic-cnpy, since it would otherwise fail with:
+#
+# dpkg: error processing archive /var/cache/apt/archives/ros-noetic-cnpy_0.0.7-3focal.20211207.001108_amd64.deb (--unpack):
+#   trying to overwrite '/opt/ros/noetic/.catkin', which is also in package ros-noetic-catkin 0.8.10-1focal.20210423.221558
+#  Errors were encountered while processing:
+#   /var/cache/apt/archives/ros-noetic-cnpy_0.0.7-3focal.20211207.001108_amd64.deb
+#  E: Sub-process /usr/bin/dpkg returned an error code (1)
+
 jobs:
   build:
     strategy:
       matrix:
         env:
-          - {ROS_DISTRO: noetic, ROS_REPO: main}
+          - {ROS_DISTRO: noetic,
+             ROS_REPO: main,
+             BEFORE_INSTALL_TARGET_DEPENDENCIES: "sudo apt-get -o Dpkg::Options::=\"--force-overwrite\" install ros-noetic-cnpy"}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
