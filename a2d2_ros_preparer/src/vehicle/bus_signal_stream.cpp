@@ -219,7 +219,7 @@ namespace a2d2_ros_preparer {
         std::filesystem::create_directory(file_path.parent_path());
         std::ofstream output(file_path);
         output << std::setprecision(std::numeric_limits<double>::digits10 + 2);
-        output << std::setw(4) << geojson << std::endl;
+        output << std::setw(2) << geojson << std::endl;
     }
 
     ValueTimeseries<double> BusSignalStream::LoadTimeseriesFromJSON(const nlohmann::json& json_data, const std::string& field_name, Duration time_offset, double value_offset, double value_factor) {
