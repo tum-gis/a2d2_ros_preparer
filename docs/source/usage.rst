@@ -6,7 +6,7 @@ Dataset Download
 ================
 
 Download the dataset preview or the complete drive dataset (Gaimersheim, Ingolstadt or Munich) from the `A2D2 download page`_.
-The dataset preview contains relatively short snippets, and a full drive dataset is quite large, like for example for
+The dataset preview contains relatively short snippets, and a full drive dataset is quite large, for example for
 Ingolstadt ~808GB:
 
 - Bus Signals: 150MB
@@ -29,7 +29,7 @@ Ingolstadt ~808GB:
     - Rear Center: 66.5GB
 
 If image data from some cameras are not needed in the rosbag to be created, there is no need to download them.
-However, it is recommended to download all LiDAR datasets, because e.g. the LiDAR dataset *front center*
+However, it is recommended to download all LiDAR datasets, e.g. the LiDAR dataset *front center*
 contains the reflections of all sensors visible in the view *front center*.
 
 The obtained directory structure should look like this:
@@ -73,15 +73,15 @@ The default values can then be overwritten in the `ingolstadt.yaml`_:
         source_bus_signals_filepath: "/path/to/Ingolstadt/bus/20190401145936_bus_signals.json"
         source_sensor_configuration_filepath: "/path/to/Ingolstadt/cams_lidars.json"
 
-        # rosbags and other artefacts are written to this directory
+        # rosbags and other artifacts are written in this directory
         target_directory: "/path/to/Ingolstadt_output"
 
     filter:
-        # select only a certain time windows for conversion (timestamps in seconds)
+        # select only a certain time window for conversion (timestamps in seconds)
         start_timestamp: 1533906470
         stop_timestamp: 1554121580
 
-Afterwards, make sure that the yaml files are loaded in the `convert.launch`_ file:
+Afterward, make sure that the yaml files are loaded in the `convert.launch`_ file:
 
 .. code-block:: xml
 
