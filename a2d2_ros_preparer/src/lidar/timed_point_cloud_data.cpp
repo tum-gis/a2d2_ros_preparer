@@ -67,7 +67,7 @@ namespace a2d2_ros_preparer {
 
     Time TimedPointCloudData::GetMinMaxMiddleTime() const {
         auto min_time = GetStartTime();
-        auto max_time = GetStartTime();
+        auto max_time = GetStopTime();
         auto min_max_duration = max_time - min_time;
         return min_time + min_max_duration/2;
     }
