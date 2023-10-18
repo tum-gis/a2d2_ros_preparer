@@ -54,7 +54,7 @@ Also, many thanks to our partners at the `SAVeNoW research project`_.
      :alt: Apache 2 license.
      :scale: 100%
      :target: https://github.com/tum-gis/a2d2_ros_preparer/blob/main/LICENSE
-.. |video| image:: https://j.gifs.com/PjMKkw.gif
+.. |video| image:: https://img.youtube.com/vi/uoTmNCU2IDM/0.jpg
     :alt: A2D2 ROS Preparer Demo
     :scale: 100%
     :target: https://www.youtube.com/watch?v=uoTmNCU2IDM
