@@ -72,7 +72,6 @@ namespace a2d2_ros_preparer {
     TimedPointCloudData FilterPointCloud(const TimedPointCloudData& point_cloud, uint64_t sensor_id);
     TimedPointCloudData FilterPointDuplicates(const TimedPointCloudData& point_cloud);
 
-    void WriteToXYZFileVerbose(const TimedPointCloudData& point_cloud, const std::filesystem::path& filepath);
     void WriteToXYZFile(const TimedPointCloudData& point_cloud, const std::filesystem::path& filepath);
 }
 

@@ -201,11 +201,32 @@ namespace a2d2_ros_preparer {
     }
 
     void
-    LidarScanStream::WriteAllDataToXYZFile(const std::filesystem::path& filepath, Time start_timestamp, Time stop_timestamp) {
+    LidarScanStream::WriteAllDataToXYZFile(const std::filesystem::path& directory_path, const std::string& filename, Time start_timestamp, Time stop_timestamp) {
         auto complete_point_cloud = GetTimedPointCloudData(start_timestamp, stop_timestamp);
         complete_point_cloud = FilterPointDuplicates(complete_point_cloud);
 
-        WriteToXYZFileVerbose(complete_point_cloud, filepath);
+        // individual non-transformed point cloud
+        auto complete_file_path = directory_path / (filename + ".xyz");
+        WriteToXYZFile(complete_point_cloud, complete_file_path);
+
+        // back-transformed point clouds differentiated by each sensor
+        auto individual_directory_path = directory_path / filename;
+        std::filesystem::create_directory(individual_directory_path);
+
+        for (auto it = lidar_identifiers_.begin(); it != lidar_identifiers_.end(); ++it) {
+            auto individual_file_path = individual_directory_path / (*it + ".xyz");
+
+            int index = std::distance(lidar_identifiers_.begin(), it);
+
+            auto current_point_cloud = FilterPointCloud(complete_point_cloud, index);
+            if (!current_point_cloud.empty()) {
+                auto transform = lidar_to_base_affine_transformation_.at(*it);
+                auto transform_inverse = transform.inverse(Eigen::Affine);
+                auto transformed_point_cloud = TransformPointCloud(current_point_cloud, transform_inverse, "lidar_" + *it);
+
+                WriteToXYZFile(transformed_point_cloud, individual_file_path);
+            }
+        }
     }
 
     Time LidarScanStream::GetTime(const CameraDirectionIdentifier& camera_identifier, DataSequenceId sequence_id) const {

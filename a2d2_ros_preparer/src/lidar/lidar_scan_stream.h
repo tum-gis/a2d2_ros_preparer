@@ -55,7 +55,7 @@ namespace a2d2_ros_preparer {
         [[nodiscard]] bool IsSensorDataAvailable(DataSequenceId id) const;
 
         void WriteAllDataToRosbag(rosbag::Bag &bag, Time start_timestamp, Time stop_timestamp);
-        void WriteAllDataToXYZFile(const std::filesystem::path& filepath, Time start_timestamp, Time stop_timestamp);
+        void WriteAllDataToXYZFile(const std::filesystem::path& directory_path, const std::string& filename, Time start_timestamp, Time stop_timestamp);
 
         TimedPointCloudData GetTimedPointCloudData(const std::map<std::string, std::set<DataSequenceId>>& ids);
         TimedPointCloudData GetTimedPointCloudData(DataSequenceId sequence_id, const std::set<std::string>& view_ids = std::set<std::string>());

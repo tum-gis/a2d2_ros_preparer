@@ -122,6 +122,8 @@ namespace a2d2_ros_preparer {
     }
 
     void Vehicle::WriteLidarDataToXYZ(const std::filesystem::path &directory_path, std::optional<Time> filter_start_timestamp, std::optional<Time> filter_stop_timestamp, Duration time_delta) {
+        CHECK_GT(time_delta, 0) << "Time delta duration must greater than zero.";
+        LOG(INFO) << "Writing lidar data with a time_delta=" << time_delta << " to XYZ files to " << directory_path;
         auto valid_start_timestamp = GetValidStartTimestamp(filter_start_timestamp);
         auto valid_stop_timestamp = GetValidStopTimestamp(filter_stop_timestamp);
 
@@ -139,9 +141,8 @@ namespace a2d2_ros_preparer {
             LOG(INFO) << "Writing lidar step " << count << "/" << complete << " (" << std::setprecision(2) << current_percent << "%)";
 
             auto filename = std::string(complete_digits - std::to_string(count).length(), '0') + std::to_string(count);
-            auto filepath = directory_path / (filename + ".xyz");
 
-            lidar_scan_stream_.WriteAllDataToXYZFile(filepath, current_timestamp, current_timestamp_stop);
+            lidar_scan_stream_.WriteAllDataToXYZFile(directory_path, filename, current_timestamp, current_timestamp_stop);
             current_timestamp += time_delta;
             count++;
         }

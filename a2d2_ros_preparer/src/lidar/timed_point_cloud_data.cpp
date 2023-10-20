@@ -141,13 +141,13 @@ namespace a2d2_ros_preparer {
     }
 
 
-    void WriteToXYZFileVerbose(const TimedPointCloudData& point_cloud, const std::filesystem::path& filepath) {
+    void WriteToXYZFile(const TimedPointCloudData& point_cloud, const std::filesystem::path& filepath) {
 
         auto start_time = point_cloud.GetStartTime();
 
         std::ofstream file;
         file.open (filepath);
-        file << "X Y Z intensity time time_since_start_in_ms timestamp rectime boundary azimuth col row depth distance sensor_id dataset_view_id dataset_sequence_id\n";
+        file << "x y z intensity time time_since_start_in_ms rectime boundary azimuth col row depth distance sensor_id dataset_view_id dataset_sequence_id\n";
         for (const auto& range: point_cloud.ranges()) {
             file << std::setprecision(std::numeric_limits<double>::digits10 + 2) <<
                  range.position.x() << " " <<
@@ -165,28 +165,7 @@ namespace a2d2_ros_preparer {
                  range.distance << " " <<
                  range.sensor_id << " " <<
                  range.dataset_view_id << " " <<
-                 range.dataset_sequence_id << "" <<
-                 "\n";
-        }
-        file.close();
-    }
-
-    void WriteToXYZFile(const TimedPointCloudData& point_cloud, const std::filesystem::path& filepath) {
-
-        auto start_time = point_cloud.GetStartTime();
-
-        std::ofstream file;
-        file.open (filepath);
-        file << "X Y Z intensity time time_since_start_in_ms\n";
-        for (const auto& range: point_cloud.ranges()) {
-            file << std::setprecision(std::numeric_limits<double>::digits10 + 2) <<
-                 range.position.x() << " " <<
-                 range.position.y() << " " <<
-                 range.position.z() << " " <<
-                 range.intensity << " " <<
-                 range.time << " " <<
-                 static_cast<double>(range.time-start_time)/1e6 << " " <<
-                 "\n";
+                 range.dataset_sequence_id << "\n";
         }
         file.close();
     }
