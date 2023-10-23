@@ -4,7 +4,6 @@ paths:
   source_sensor_configuration_filepath: "/path/to/a2d2-preview/cams_lidars.json"
 
   target_directory: "/path/to/a2d2-preview_output"
-  target_trajectories_subdirectory: ""
 
 # filter:
   # start_timestamp: 1533906480

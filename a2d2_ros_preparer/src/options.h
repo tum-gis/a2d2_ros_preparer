@@ -130,7 +130,7 @@ namespace a2d2_ros_preparer {
         std::optional<std::filesystem::path> source_sensor_configuration_filepath_;
 
         std::filesystem::path target_directory_;
-        std::string target_trajectories_subdirectory_name_ = "";
+        std::string target_trajectories_subdirectory_name_ = "driving_dataset_gnss_trajectories";
 
         // filter
         std::optional<Time> filter_start_timestamp_ = {};
