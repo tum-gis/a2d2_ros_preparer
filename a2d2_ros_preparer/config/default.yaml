@@ -14,7 +14,7 @@ camera_sensors:
 
 bus_signals:
   time_offset_tolerance: 0.001
-  altitude_offset: 45.28
+  altitude_offset: -1.2
 
   fieldnames:
     velocity: "vehicle_speed"
