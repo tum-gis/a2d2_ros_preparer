@@ -39,6 +39,7 @@ namespace a2d2_ros_preparer {
     private:
         static void ParsePaths(const ros::NodeHandle& node, const std::string& prefix, Options& options);
         static void ParseFilter(const ros::NodeHandle& node, const std::string& prefix, Options& options);
+        static void ParseLidarSensors(const ros::NodeHandle& node, const std::string& prefix, Options& options);
         static void ParseCameraSensors(const ros::NodeHandle& node, const std::string& prefix, Options& options);
         static void ParseBusSignals(const ros::NodeHandle& node, std::string prefix, Options& options);
         static void ParsePublish(const ros::NodeHandle& node, const std::string& prefix, Options& options);

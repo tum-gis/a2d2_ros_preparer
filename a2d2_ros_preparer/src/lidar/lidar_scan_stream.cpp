@@ -28,6 +28,7 @@ namespace a2d2_ros_preparer {
     LidarScanStream::LidarScanStream(const std::filesystem::path& lidar_data_directory,
                                      const std::vector<CameraDirectionIdentifier>& camera_identifiers,
                                      std::vector<LidarDirectionIdentifier> lidar_identifiers,
+                                     const std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> sensor_id_remappings,
                                      std::map<CameraDirectionIdentifier, Eigen::Affine3d> camera_to_base_affine_transformation,
                                      std::map<LidarDirectionIdentifier, Eigen::Affine3d> lidar_to_base_affine_transformation,
                                      std::optional<Time> filter_start_timestamp,
@@ -42,7 +43,14 @@ namespace a2d2_ros_preparer {
                 continue;
             }
             auto directory_path = GetSubdirectoryPath(lidar_data_directory, current_camera_identifier);
-            auto sensor_data_timeseries = LidarScanTimeseriesPerView(directory_path, current_camera_identifier, filter_start_timestamp, filter_stop_timestamp);
+
+            std::map<uint64_t, uint64_t> current_sensor_id_remappings = {};
+            if (sensor_id_remappings.count(current_camera_identifier))
+            {
+                current_sensor_id_remappings = sensor_id_remappings.at(current_camera_identifier);
+            }
+
+            auto sensor_data_timeseries = LidarScanTimeseriesPerView(directory_path, current_camera_identifier, current_sensor_id_remappings, filter_start_timestamp, filter_stop_timestamp);
             lidar_scan_timeseries_per_view_.insert(std::make_pair(current_camera_identifier, sensor_data_timeseries));
         }
 

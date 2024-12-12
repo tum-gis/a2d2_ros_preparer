@@ -58,6 +58,12 @@ namespace a2d2_ros_preparer {
         [[nodiscard]] std::optional<Time> filter_stop_timestamp() const { return filter_stop_timestamp_; }
         [[nodiscard]] std::set<CameraDirectionIdentifier> filter_camera_identifiers() const { return filter_camera_identifiers_; }
 
+        // lidar sensors
+        void SetLidarSensorsIdRemappings(std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> remappings) { lidar_sensor_id_remappings_ = std::move(remappings); }
+
+        [[nodiscard]] std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> lidar_sensor_id_remappings() const { return lidar_sensor_id_remappings_; }
+
+
         // camera sensors
         void SetFieldNameImageTime(std::string field_name) { field_name_image_time_ = std::move(field_name); }
         void SetCameraSensorsTimeEstimationLidarTimeframeToImageRatio(double ratio) { camera_sensors_time_estimation_lidar_timeframe_to_image_ratio_ = ratio; }
@@ -136,6 +142,9 @@ namespace a2d2_ros_preparer {
         std::optional<Time> filter_start_timestamp_ = {};
         std::optional<Time> filter_stop_timestamp_ = {};
         std::set<CameraDirectionIdentifier> filter_camera_identifiers_ = {};
+
+        // lidar sensors
+        std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> lidar_sensor_id_remappings_;
 
         // camera sensors
         std::string field_name_image_time_ = "cam_tstamp";

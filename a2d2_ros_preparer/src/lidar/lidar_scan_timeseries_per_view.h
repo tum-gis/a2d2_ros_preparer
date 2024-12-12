@@ -30,6 +30,7 @@ namespace a2d2_ros_preparer {
     public:
         explicit LidarScanTimeseriesPerView(const std::filesystem::path& directory_path,
                                             const std::string& frame_id,
+                                            const std::map<uint64_t, uint64_t>& sensor_id_remappings,
                                             std::optional<Time> filter_start_timestamp,
                                             std::optional<Time> filter_stop_timestamp);
 
@@ -54,6 +55,7 @@ namespace a2d2_ros_preparer {
     private:
         std::string frame_id_;
         std::map<DataSequenceId, std::filesystem::path> filepaths_;
+        const std::map<uint64_t, uint64_t> sensor_id_remappings_;
 
         std::map<DataSequenceId, Time> point_cloud_time_min_;
         std::map<DataSequenceId, Time> point_cloud_time_max_;

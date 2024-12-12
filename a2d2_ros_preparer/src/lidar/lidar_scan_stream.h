@@ -34,6 +34,7 @@ namespace a2d2_ros_preparer {
         explicit LidarScanStream(const std::filesystem::path& lidar_data_directory,
                                  const std::vector<CameraDirectionIdentifier>& camera_identifiers,
                                  std::vector<LidarDirectionIdentifier> lidar_identifiers,
+                                 const std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> sensor_id_remappings,
                                  std::map<CameraDirectionIdentifier, Eigen::Affine3d> camera_to_base_affine_transformation,
                                  std::map<LidarDirectionIdentifier, Eigen::Affine3d> lidar_to_base_affine_transformation,
                                  std::optional<Time> filter_start_timestamp,

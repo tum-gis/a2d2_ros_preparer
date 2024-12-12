@@ -22,7 +22,7 @@
 
 namespace a2d2_ros_preparer {
 
-    TimedPointCloudData ReadFile(const std::filesystem::path& filepath, const std::string& view_id, const DataSequenceId& sequence_id) {
+    TimedPointCloudData ReadFile(const std::filesystem::path& filepath, const std::string& view_id, const DataSequenceId& sequence_id, const std::map<uint64_t, uint64_t>& sensor_id_remappings) {
         CHECK(exists(filepath)) << "File not found at: " << filepath;
 
         cnpy::npz_t npz_file = cnpy::npz_load(filepath);
@@ -41,6 +41,22 @@ namespace a2d2_ros_preparer {
         auto distance_data = npz_file["pcloud_attr.distance"].as_vec<double>();
 
         auto sensor_id_data = npz_file["pcloud_attr.lidar_id"].as_vec<uint64_t>();
+        // remapping the lidar sensor ids in case they have been provided inconsistently per camera view
+        if (!sensor_id_remappings.empty()) {
+            std::vector<uint64_t> remapped_sensor_id_data;
+            remapped_sensor_id_data.reserve(sensor_id_data.size());
+
+            for (const auto id : sensor_id_data) {
+                if (sensor_id_remappings.count(id) == 1) {
+                    remapped_sensor_id_data.push_back(sensor_id_remappings.at(id));
+                } else {
+                    remapped_sensor_id_data.push_back(id); // Retain original if no mapping exists
+                }
+            }
+
+            sensor_id_data = std::move(remapped_sensor_id_data);
+        }
+        
 
         std::vector<TimedRangefinderPoint> ranges;
         for (int i=0; i < number_points; i++)

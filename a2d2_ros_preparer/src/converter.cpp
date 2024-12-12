@@ -45,6 +45,7 @@ namespace a2d2_ros_preparer {
         auto lidar_scan_stream = LidarScanStream(vehicle_configuration.GetLidarDataDirectoryPath(),
                                                  vehicle_configuration.GetCameraIdentifiers(),
                                                  vehicle_configuration.GetLidarIdentifiers(),
+                                                 options.lidar_sensor_id_remappings(),
                                                  vehicle_configuration.GetCameraToBaseAffineTransforms(),
                                                  vehicle_configuration.GetLidarToBaseAffineTransforms(),
                                                  options.filter_start_timestamp(),

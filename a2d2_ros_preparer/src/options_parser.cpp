@@ -18,6 +18,7 @@
 #include "options_parser.h"
 
 #include <iostream>
+#include <boost/algorithm/string/split.hpp>
 #include <glog/logging.h>
 
 namespace a2d2_ros_preparer {
@@ -30,6 +31,7 @@ namespace a2d2_ros_preparer {
 
         ParsePaths(node, prefix + "/paths", options);
         ParseFilter(node, prefix + "/filter", options);
+        ParseLidarSensors(node, prefix + "/lidar_sensors", options);
         ParseCameraSensors(node, prefix + "/camera_sensors", options);
         ParseBusSignals(node, prefix + "/bus_signals", options);
         ParsePublish(node, prefix + "/publish", options);
@@ -61,6 +63,40 @@ namespace a2d2_ros_preparer {
         if (node.hasParam(prefix + "/camera_identifiers"))
             options.SetFilterCameraIdentifiers(GetParam<std::vector<std::string>>(node, prefix + "/camera_identifiers"));
     }
+
+    void OptionsParser::ParseLidarSensors(const ros::NodeHandle& node, const std::string& prefix, Options& options) {
+        std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> parsed_lidar_id_remappings = {};
+
+        std::vector<std::string> all_keys;
+        node.getParamNames(all_keys);
+
+        std::string remapping_prefix = prefix + "/lidar_id_remappings";
+        for (auto const &key : all_keys)
+        {
+            if (key.find(remapping_prefix) != 0)
+                continue;
+
+            std::string remaining_key = key.substr(remapping_prefix.length() + 1); // Skip the prefix and '/'
+            std::stringstream remaining_key_stringstream(remaining_key);
+            std::string segment;
+            std::vector<std::string> param_names;
+            while(std::getline(remaining_key_stringstream, segment, '/'))
+            {
+                param_names.push_back(segment);
+            }
+
+            std::string current_camera_identifier = param_names.at(0);
+            uint64_t mapping_from = std::stoi(param_names.at(1));
+            uint64_t mapping_to = GetParam<double>(node, key);
+            // std::cout << "current key " << key << " current_camera_identifier " << current_camera_identifier <<
+            // " mapping_from " << mapping_from << " mapping_to " << mapping_to << std::endl;
+
+            parsed_lidar_id_remappings[current_camera_identifier][mapping_from] = mapping_to;
+        }
+        options.SetLidarSensorsIdRemappings(parsed_lidar_id_remappings);
+
+    }
+
 
     void OptionsParser::ParseCameraSensors(const ros::NodeHandle& node, const std::string& prefix, Options& options) {
         if (node.hasParam(prefix + "/fieldnames/image_timestamp"))

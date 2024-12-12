@@ -30,8 +30,11 @@ namespace a2d2_ros_preparer {
 
     LidarScanTimeseriesPerView::LidarScanTimeseriesPerView(const std::filesystem::path& directory_path,
                                                            const std::string& frame_id,
+                                                           const std::map<uint64_t, uint64_t>& sensor_id_remappings,
                                                            std::optional<Time> filter_start_timestamp,
-                                                           std::optional<Time> filter_stop_timestamp): frame_id_(frame_id) {
+                                                           std::optional<Time> filter_stop_timestamp):
+    frame_id_(frame_id), sensor_id_remappings_(sensor_id_remappings) {
+
         LOG(INFO) << "Reading lidar data for view: " << frame_id;
 
         // get all filepaths
@@ -77,7 +80,7 @@ namespace a2d2_ros_preparer {
         std::mutex m;
         std::for_each(std::execution::par_unseq, std::begin(filtered_filepaths), std::end(filtered_filepaths), [&](std::filesystem::path& current_filepath) {
             DataSequenceId current_id = ExtractLastIntegerFromString(current_filepath.stem());
-            auto point_cloud = ReadFile(current_filepath, frame_id_, current_id);
+            auto point_cloud = ReadFile(current_filepath, frame_id_, current_id, sensor_id_remappings_);
 
             auto time_min = point_cloud.GetStartTime();
             auto time_max = point_cloud.GetStopTime();
@@ -103,7 +106,7 @@ namespace a2d2_ros_preparer {
     TimedPointCloudData LidarScanTimeseriesPerView::GetTimedPointCloudData(DataSequenceId id) const {
         CHECK(HasData(id)) << "No lidar data for view '" << frame_id_ << "' and id '" << id << "'";
 
-        return ReadFile(filepaths_.at(id), frame_id_, id);
+        return ReadFile(filepaths_.at(id), frame_id_, id, sensor_id_remappings_);
     }
 
     std::vector<DataSequenceId> LidarScanTimeseriesPerView::GetDataSequenceIds() const {

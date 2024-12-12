@@ -23,7 +23,7 @@
 
 namespace a2d2_ros_preparer {
 
-    TimedPointCloudData ReadFile(const std::filesystem::path& , const std::string& view_id, const DataSequenceId& sequence_id);
+    TimedPointCloudData ReadFile(const std::filesystem::path& , const std::string& view_id, const DataSequenceId& sequence_id, const std::map<uint64_t, uint64_t>& sensor_id_remappings = {});
 
 }
 
