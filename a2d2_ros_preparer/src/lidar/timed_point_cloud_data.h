@@ -68,6 +68,7 @@ namespace a2d2_ros_preparer {
     };
 
     TimedPointCloudData TransformPointCloud(const TimedPointCloudData& point_cloud, const Eigen::Affine3d& affine, const std::string& target_frame_id);
+    TimedPointCloudData TransformPointCloudSensorSpecific(const TimedPointCloudData& point_cloud, const std::map<uint64_t, Eigen::Matrix4d>& lidar_specific_matrices);
     TimedPointCloudData FilterPointCloud(const TimedPointCloudData& point_cloud, Time time_min, Time time_max);
     TimedPointCloudData FilterPointCloud(const TimedPointCloudData& point_cloud, uint64_t sensor_id);
     TimedPointCloudData FilterPointDuplicates(const TimedPointCloudData& point_cloud);

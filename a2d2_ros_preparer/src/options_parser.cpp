@@ -65,12 +65,12 @@ namespace a2d2_ros_preparer {
     }
 
     void OptionsParser::ParseLidarSensors(const ros::NodeHandle& node, const std::string& prefix, Options& options) {
-        std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> parsed_lidar_id_remappings = {};
-
         std::vector<std::string> all_keys;
         node.getParamNames(all_keys);
 
+        // parse lidar id remappings
         std::string remapping_prefix = prefix + "/lidar_id_remappings";
+        std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> parsed_lidar_id_remappings = {};
         for (auto const &key : all_keys)
         {
             if (key.find(remapping_prefix) != 0)
@@ -95,6 +95,33 @@ namespace a2d2_ros_preparer {
         }
         options.SetLidarSensorsIdRemappings(parsed_lidar_id_remappings);
 
+
+        // parse lidar id remappings
+        auto lidar_correction_transformation = std::map<LidarDirectionIdentifier, Eigen::Matrix4d>();
+        std::string correction_prefix = prefix + "/lidar_transformation_corrections";
+        for (auto const &key : all_keys)
+        {
+            if (key.find(correction_prefix) != 0)
+                continue;
+
+            std::string remaining_key = key.substr(correction_prefix.length() + 1); // Skip the prefix and '/'
+            std::stringstream remaining_key_stringstream(remaining_key);
+            std::string segment;
+            std::vector<std::string> param_names;
+            while(std::getline(remaining_key_stringstream, segment, '/'))
+            {
+                param_names.push_back(segment);
+            }
+
+            std::string current_lidar_identifier = param_names.at(0);
+            auto matrix_values = GetParam<std::vector<double>>(node, key);
+            Eigen::Matrix4d matrix = Eigen::Map<Eigen::Matrix4d>(matrix_values.data());
+            // std::cout << "Matrix:\n" << matrix << std::endl;
+
+            lidar_correction_transformation.insert(std::make_pair(current_lidar_identifier, matrix));
+        }
+
+        options.SetLidarCorrectionTransformation(lidar_correction_transformation);
     }
 
 

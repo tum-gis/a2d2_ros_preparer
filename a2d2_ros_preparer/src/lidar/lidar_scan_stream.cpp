@@ -28,14 +28,16 @@ namespace a2d2_ros_preparer {
     LidarScanStream::LidarScanStream(const std::filesystem::path& lidar_data_directory,
                                      const std::vector<CameraDirectionIdentifier>& camera_identifiers,
                                      std::vector<LidarDirectionIdentifier> lidar_identifiers,
-                                     const std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> sensor_id_remappings,
+                                     std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> sensor_id_remappings,
                                      std::map<CameraDirectionIdentifier, Eigen::Affine3d> camera_to_base_affine_transformation,
                                      std::map<LidarDirectionIdentifier, Eigen::Affine3d> lidar_to_base_affine_transformation,
+                                     std::map<LidarDirectionIdentifier, Eigen::Matrix4d> lidar_correction_transformation,
                                      std::optional<Time> filter_start_timestamp,
                                      std::optional<Time> filter_stop_timestamp) :
             lidar_identifiers_(std::move(lidar_identifiers)),
             camera_to_base_affine_transformation_(std::move(camera_to_base_affine_transformation)),
-            lidar_to_base_affine_transformation_(std::move(lidar_to_base_affine_transformation)) {
+            lidar_to_base_affine_transformation_(std::move(lidar_to_base_affine_transformation)),
+            lidar_correction_transformation_(std::move(lidar_correction_transformation)) {
 
         for (auto const& current_camera_identifier: camera_identifiers) {
             if (!IsSubdirectoryContained(lidar_data_directory, current_camera_identifier)) {
@@ -84,14 +86,22 @@ namespace a2d2_ros_preparer {
         std::vector<TimedPointCloudData> point_clouds;
 
         std::for_each(std::execution::par_unseq, std::begin(camera_identifiers), std::end(camera_identifiers), [&](const std::string& current_camera_identifier) {
-            auto point_cloud = lidar_scan_timeseries_per_view_.at(current_camera_identifier).GetTimedPointCloudData(timestamp_min, timestamp_max);
-            auto transformed_point_cloud = TransformPointCloud(point_cloud, camera_to_base_affine_transformation_.at(current_camera_identifier), "base_link");
+            const auto point_cloud = lidar_scan_timeseries_per_view_.at(current_camera_identifier).GetTimedPointCloudData(timestamp_min, timestamp_max);
+            const auto transformed_point_cloud = TransformPointCloud(point_cloud, camera_to_base_affine_transformation_.at(current_camera_identifier), "base_link");
 
             std::lock_guard<std::mutex> guard(m);
             point_clouds.push_back(transformed_point_cloud);
         });
+        auto combined_point_cloud = TimedPointCloudData(point_clouds);
 
-        return TimedPointCloudData(point_clouds);
+        // apply post corrections if defined
+        if (!lidar_correction_transformation_.empty())
+        {
+            auto lidar_correction_transformation_per_index = GetLidarCorrectionTransformationPerIndex();
+            combined_point_cloud = TransformPointCloudSensorSpecific(combined_point_cloud, lidar_correction_transformation_per_index);
+        }
+
+        return combined_point_cloud;
     }
 
     std::vector<DataSequenceId> LidarScanStream::GetAllDataSequenceIds() const {
@@ -116,12 +126,29 @@ namespace a2d2_ros_preparer {
         return lidar_scan_timeseries.GetDataSequenceIds(start_timestamp, stop_timestamp);
     }
 
+    uint64_t LidarScanStream::GetLidarIndex(const LidarDirectionIdentifier& id) const {
+        const auto it = std::find(lidar_identifiers_.begin(), lidar_identifiers_.end(), id);
+        if (it == lidar_identifiers_.end()) {
+            throw std::out_of_range("LidarDirectionIdentifier not found");
+        }
+        return std::distance(lidar_identifiers_.begin(), it);
+    }
+
     bool LidarScanStream::IsSensorDataAvailable(DataSequenceId id) const {
         for (const auto& [_, current_sensor_data_timeseries] : lidar_scan_timeseries_per_view_) {
             if (!current_sensor_data_timeseries.HasData(id))
                 return false;
         }
         return true;
+    }
+
+    std::map<uint64_t, Eigen::Matrix4d> LidarScanStream::GetLidarCorrectionTransformationPerIndex() const {
+        auto lidar_correction_transformation_per_index = std::map<uint64_t, Eigen::Matrix4d>();
+        for(const auto & [lidar_direction_identifier, matrix] : lidar_correction_transformation_) {
+            lidar_correction_transformation_per_index.insert(std::make_pair(GetLidarIndex(lidar_direction_identifier), matrix));
+        }
+
+        return lidar_correction_transformation_per_index;
     }
 
     Time LidarScanStream::GetStartTimestamp() const {
@@ -193,9 +220,7 @@ namespace a2d2_ros_preparer {
         complete_point_cloud = FilterPointDuplicates(complete_point_cloud);
 
         for (auto it = lidar_identifiers_.begin(); it != lidar_identifiers_.end(); ++it) {
-            int index = std::distance(lidar_identifiers_.begin(), it);
-
-            auto current_point_cloud = FilterPointCloud(complete_point_cloud, index);
+            auto current_point_cloud = FilterPointCloud(complete_point_cloud, GetLidarIndex(*it));
             if (!current_point_cloud.empty()) {
                 auto transform = lidar_to_base_affine_transformation_.at(*it);
                 auto transform_inverse = transform.inverse(Eigen::Affine);
@@ -224,9 +249,7 @@ namespace a2d2_ros_preparer {
         for (auto it = lidar_identifiers_.begin(); it != lidar_identifiers_.end(); ++it) {
             auto individual_file_path = individual_directory_path / (*it + ".xyz");
 
-            int index = std::distance(lidar_identifiers_.begin(), it);
-
-            auto current_point_cloud = FilterPointCloud(complete_point_cloud, index);
+            auto current_point_cloud = FilterPointCloud(complete_point_cloud, GetLidarIndex(*it));
             if (!current_point_cloud.empty()) {
                 auto transform = lidar_to_base_affine_transformation_.at(*it);
                 auto transform_inverse = transform.inverse(Eigen::Affine);

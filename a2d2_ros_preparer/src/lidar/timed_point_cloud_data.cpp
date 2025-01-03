@@ -100,7 +100,26 @@ namespace a2d2_ros_preparer {
 
             transformed_ranges.push_back(result_range);
         }
-        TimedPointCloudData transformed_point_cloud = TimedPointCloudData(transformed_ranges, target_frame_id);
+        auto transformed_point_cloud = TimedPointCloudData(transformed_ranges, target_frame_id);
+        return transformed_point_cloud;
+    }
+
+    TimedPointCloudData TransformPointCloudSensorSpecific(const TimedPointCloudData& point_cloud, const std::map<uint64_t, Eigen::Matrix4d>& lidar_specific_matrices) {
+
+        std::vector<TimedRangefinderPoint> transformed_ranges;
+        for (const auto& current_range: point_cloud.ranges()) {
+            TimedRangefinderPoint result_range = current_range;
+
+            if (lidar_specific_matrices.count(current_range.sensor_id) > 0)
+            {
+                auto position_4d = Eigen::Vector4d(current_range.position.x(), current_range.position.y(), current_range.position.z(), 1.0);
+                Eigen::Vector4d transformed_position_4d = lidar_specific_matrices.at(current_range.sensor_id) * position_4d;
+                result_range.position = Eigen::Vector3d(transformed_position_4d.x(), transformed_position_4d.y(), transformed_position_4d.z());
+            }
+
+            transformed_ranges.push_back(result_range);
+        }
+        auto transformed_point_cloud = TimedPointCloudData(transformed_ranges, point_cloud.frame_id());
         return transformed_point_cloud;
     }
 

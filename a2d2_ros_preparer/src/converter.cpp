@@ -48,6 +48,7 @@ namespace a2d2_ros_preparer {
                                                  options.lidar_sensor_id_remappings(),
                                                  vehicle_configuration.GetCameraToBaseAffineTransforms(),
                                                  vehicle_configuration.GetLidarToBaseAffineTransforms(),
+                                                 options.lidar_correction_transformation(),
                                                  options.filter_start_timestamp(),
                                                  options.filter_stop_timestamp());
 

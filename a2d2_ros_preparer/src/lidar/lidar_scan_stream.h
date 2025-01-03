@@ -34,9 +34,10 @@ namespace a2d2_ros_preparer {
         explicit LidarScanStream(const std::filesystem::path& lidar_data_directory,
                                  const std::vector<CameraDirectionIdentifier>& camera_identifiers,
                                  std::vector<LidarDirectionIdentifier> lidar_identifiers,
-                                 const std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> sensor_id_remappings,
+                                 std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> sensor_id_remappings,
                                  std::map<CameraDirectionIdentifier, Eigen::Affine3d> camera_to_base_affine_transformation,
                                  std::map<LidarDirectionIdentifier, Eigen::Affine3d> lidar_to_base_affine_transformation,
+                                 std::map<LidarDirectionIdentifier, Eigen::Matrix4d> lidar_correction_transformation,
                                  std::optional<Time> filter_start_timestamp,
                                  std::optional<Time> filter_stop_timestamp);
 
@@ -53,7 +54,9 @@ namespace a2d2_ros_preparer {
         [[nodiscard]] std::map<CameraDirectionIdentifier, std::map<DataSequenceId, Time>> GetPointCloudTimeMaxsPerCameraDirection() const;
         [[nodiscard]] std::map<CameraDirectionIdentifier, std::vector<DataSequenceId>> GetAllDataSequenceIdsPerCameraDirection() const;
 
+        [[nodiscard]] uint64_t GetLidarIndex(const LidarDirectionIdentifier& id) const;
         [[nodiscard]] bool IsSensorDataAvailable(DataSequenceId id) const;
+        [[nodiscard]] std::map<uint64_t, Eigen::Matrix4d> GetLidarCorrectionTransformationPerIndex() const;
 
         void WriteAllDataToRosbag(rosbag::Bag &bag, Time start_timestamp, Time stop_timestamp);
         void WriteAllDataToXYZFile(const std::filesystem::path& directory_path, const std::string& filename, Time start_timestamp, Time stop_timestamp);
@@ -70,6 +73,8 @@ namespace a2d2_ros_preparer {
 
         std::map<CameraDirectionIdentifier, Eigen::Affine3d> camera_to_base_affine_transformation_;
         std::map<LidarDirectionIdentifier, Eigen::Affine3d> lidar_to_base_affine_transformation_;
+
+        std::map<LidarDirectionIdentifier, Eigen::Matrix4d> lidar_correction_transformation_;
     };
 }
 

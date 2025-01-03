@@ -22,6 +22,7 @@
 #include <cmath>
 #include <utility>
 #include <glog/logging.h>
+#include <Eigen/StdVector>
 #include "common/timing.h"
 #include "common/types.h"
 
@@ -60,9 +61,10 @@ namespace a2d2_ros_preparer {
 
         // lidar sensors
         void SetLidarSensorsIdRemappings(std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> remappings) { lidar_sensor_id_remappings_ = std::move(remappings); }
+        void SetLidarCorrectionTransformation(std::map<LidarDirectionIdentifier, Eigen::Matrix4d> matrices) { lidar_correction_transformation_ = std::move(matrices); }
 
         [[nodiscard]] std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> lidar_sensor_id_remappings() const { return lidar_sensor_id_remappings_; }
-
+        [[nodiscard]] std::map<LidarDirectionIdentifier, Eigen::Matrix4d> lidar_correction_transformation() const { return lidar_correction_transformation_; }
 
         // camera sensors
         void SetFieldNameImageTime(std::string field_name) { field_name_image_time_ = std::move(field_name); }
@@ -145,6 +147,7 @@ namespace a2d2_ros_preparer {
 
         // lidar sensors
         std::map<CameraDirectionIdentifier, std::map<uint64_t, uint64_t>> lidar_sensor_id_remappings_;
+        std::map<LidarDirectionIdentifier, Eigen::Matrix4d> lidar_correction_transformation_;
 
         // camera sensors
         std::string field_name_image_time_ = "cam_tstamp";
