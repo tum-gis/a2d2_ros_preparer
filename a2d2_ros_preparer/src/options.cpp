@@ -105,10 +105,9 @@ namespace a2d2_ros_preparer {
         CHECK(exists(source_sensor_configuration_filepath())) << "Source sensor configuration file does not exist at: " << source_sensor_configuration_filepath();
 
         CHECK(!target_directory().empty()) << "Target directory must be configured and not be empty.";
-        CHECK(exists(target_directory().parent_path())) << "Parent path of configured target directory must exist for: ." << target_directory();
         if (!exists(target_directory())) {
             LOG(INFO) << "Creating target directory at: " << target_directory();
-            std::filesystem::create_directory(target_directory());
+            std::filesystem::create_directories(target_directory());
         }
 
     }
