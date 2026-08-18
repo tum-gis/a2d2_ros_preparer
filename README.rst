@@ -13,8 +13,8 @@ A2D2 includes five LiDARs, six cameras and bus signals.
 
 |video|
 
-.. _Audi Autonomous Driving Dataset (A2D2): https://www.a2d2.audi
-.. _sensor setup: https://www.a2d2.audi/a2d2/en/sensor-setup.html
+.. _Audi Autonomous Driving Dataset (A2D2): https://a2d2-dataset.github.io/
+.. _sensor setup: https://arxiv.org/pdf/2004.06320
 
 Getting started
 ===============
